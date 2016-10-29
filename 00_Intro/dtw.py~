@@ -1,0 +1,88 @@
+import numpy as np
+
+### DTW implementation ###
+def dynamic_time_warping(time_series_1, time_series_2, base_distance,
+                         plot=False) :
+    """ Implementation of the Dynamic Time-Warping algorithm 
+    
+    The Dynamic Time-Warping algorithm (dtw) takes as input two time series
+    (*time_series_1* (ts1) and *time_series_2* (ts2)) and a ``base distance''
+    (dist) and returns the distance and the optimal alignment of these two time
+    series. The two time series need not have the same length (i.e., it is
+    possible that n != m). The basic idea of the algorithm is that any of the
+    $n$ elements of *time_series_1* needs to be assigned to exactly one of the
+    m elements of *time_series_2*. Thus, an alignment $a: \{0,\dots,n-1\}
+    \rightarrow \{0,\dots,m-1\}$ is constructed with the constraint that $a(i)
+    \leq a(i+1)$. The distance of two time series is defined to be $dtw(ts1,
+    ts2) = \min\limits_a \sum_{i=0}^n dist(ts1[i,:], ts2[a(i),:])$, where dist
+    is the base distance of two elements of the time series.
+
+    For the scope of this exercise, the time series are assumed to be
+    *d*-dimensional, real-valued time series and the base distance to be
+    the euclidean distance of two *d*-dimensional vectors
+    (i.e., $dist(x,y) = \sqrt{\sum_{i=0}^{d-1} (x_i - y_i)^2}$). 
+
+    The algorithm constructs internally an $n\times m$ matrix called dtw_matrix
+    that contains as entry with index (i, j) the distance of the two sub-time
+    series ts1[0 ... i] and ts2[0 ... j]. The entry with index (n-1, m-1) is
+    thus the distance of ts1 and ts2. By finding the optimal path through
+    dtw_matrix from (n-1, m-1) to (0, 0) the implicitly determined alignment
+    can be constructed. I.e., if the path contains the pairs $(i, j_1),\dots,(i,
+    j_k)$, then it holds true that $a(i) = max(j_1,\dots,j_k)$ for the optimal
+    alignment.
+    """
+    # Construct cost matrix
+    m = np.zeros((time_series_1.shape[1], time_series_2.shape[1]))
+    m[0, :] = np.inf
+    m[:, 0] = np.inf
+    m[0, 0] = 0
+    for i in range(1, m.shape[0]):
+        for j in range(1, m.shape[1]):
+            cost = base_distance(time_series_1[:, i],
+                                 time_series_2[:, j])
+            m[i, j] = cost + min(m[i - 1, j],        # insertion
+                                 m[i, j - 1],        # deletion
+                                 m[i - 1, j - 1])    # match
+            
+    # Reconstruction of path through matrix  
+    i = m.shape[0] - 1
+    j = m.shape[1] - 1
+    path = [(i, j)]  
+    while i > 1 or j > 1:
+        k = np.argmin([m[i - 1, j], m[i, j - 1], m[i - 1, j - 1]])
+        # 0: insertion, 1: deletion, 2: match
+        if k in [0, 2]:
+            i -= 1
+        if k in [1, 2]:
+            j -= 1    
+        path.append((i, j))
+    path.append((0, 0))
+    path.reverse()
+    
+    if plot:
+        import pylab
+        pylab.figure()
+        pylab.imshow(m[1:,1:])
+        pylab.colorbar()
+        pylab.plot(map(lambda x: x[1], path),
+                   map(lambda x: x[0], path), 'k', lw=2)
+        pylab.xlim(0, m.shape[0])
+        pylab.ylim(0, m.shape[1])
+    
+    return m[-1, -1], path
+
+def warp(time_series_1, time_series_2, alignment):
+    aligned_ts1 = np.zeros_like(time_series_2)
+    for (i1, j1), (i2, j2) in zip(alignment, alignment[1:]):
+        aligned_ts1[:, j1] = time_series_1[:, i1]
+    return aligned_ts1
+
+def plot_alignment(time_series_1, time_series_2, alignment):
+    import pylab
+    pylab.figure()
+    pylab.plot(time_series_1[0,:], 'r', label="ts1", lw=3)
+    pylab.plot(time_series_2[0,:], 'b', label="ts2", lw=3)
+    pylab.plot(warp(time_series_1, time_series_2, alignment)[0,:], 'y', label="a(ts1)", lw=3, alpha=0.5)
+    pylab.fill_between(range(time_series_1.shape[1]), x time_series_2[0,:], warp(time_series_1, time_series_2, alignment)[0,:], color='grey', alpha=0.5)
+    pylab.legend(loc=0)
+    pylab.show()
