@@ -10,7 +10,7 @@ colors = ['b', 'g', 'c', 'm', 'y', 'k']
 def iirfilter(dataset, alpha):
     filtered = n.zeros(dataset.shape[0]);
     for i, val in enumerate(dataset):
-        filtered[i] = val*(((1-alpha)*(1+filtered[i-1]))/(2*(1-alpha*filtered[i-1])))
+        filtered[i] = val*alpha + (1-alpha)*filtered[i-1]
     return filtered
 
 def sd(values):
@@ -61,19 +61,26 @@ if __name__ == "__main__":
     p.plot(time, create_sd_feature(stat, 300, 0), 'g', label="buffer 300")
     p.legend()
     p.show()
+    
+    sampling_rate = 10.0
+    time_interval = 1.0/sampling_rate
+    length = len(time)
+    k = n.arange(length)
+    T = length/sampling_rate
+    frequency = k/T
 
     fourier_1 = n.fft.fft(firstC)/len(time)
     fourier_2 = n.fft.fft(dataset[:,2])/len(time)
     fourier_3 = n.fft.fft(stat)/len(time)
-    p.plot(time, fourier_1, 'b', label="second column")
+    p.plot(frequency, abs(fourier_1), 'b', label="second column")
     p.legend()
     p.show()
 
-    p.plot(time, fourier_2, 'b', label="third column")
+    p.plot(frequency, abs(fourier_2), 'b', label="third column")
     p.legend()
     p.show()
 
-    p.plot(time, fourier_3, 'b', label="fourth column")
+    p.plot(frequency, abs(fourier_3), 'b', label="fourth column")
     p.legend()
     p.show()
 
