@@ -1,0 +1,66 @@
+\documentclass{article}
+\usepackage{amsmath}
+\usepackage[utf8]{inputenc}
+\usepackage{listings}
+
+\addtolength{\oddsidemargin}{-.875in}
+\addtolength{\evensidemargin}{-.875in}
+\addtolength{\textwidth}{1.75in}
+
+\addtolength{\topmargin}{-.875in}
+\addtolength{\textheight}{1.75in}
+
+\lstset{
+	basicstyle=\footnotesize,
+	numbers=left,
+	tabsize=3,
+	title=\lstname,
+	breaklines=true
+}
+	
+\begin{document}
+\section*{Übung 2 - Lernmethoden für autonome Roboter}
+\subsection{Feature Selection}
+\paragraph{}
+Die Formel zur Berechnung des Korrelationskoeffizienten für zwei Klassen ist:
+
+\[
+	r_X(f_i,f_j) = \frac{\sum \limits_{k=1}^{n} (X[k,i] - \overline{X[:,i]})(X[k,j] - \overline{X[:,j]})}{\sqrt{\sum \limits_{k=1}^{n} (X[k,i] - \overline{X[:,i]})^2} \sqrt{\sum \limits_{k=1}^{n} (X[k,j] - \overline{X[:,j]})^2 }}
+\]
+
+\paragraph{}
+Aufbauend auf folgender Formel können wir nun die Korrelationskoeffizienten unter den Features und von den Features mit der Klasse berechnen:
+\paragraph{}
+\begin{tabular}{|l|l|l|l|l|}
+	\hline
+	Feature\textbackslash{}Korrelation mit: & A & B & C & Klasse \\\hline
+	A & 1 & 1 & -0.762 & 0.881 \\\hline
+	B & 1 & 1 & -0.762 & 0.881 \\\hline
+	C & -0.762 & -0.762 & 1 & -0.864 \\\hline
+\end{tabular}
+
+\paragraph{}
+\begin{tabular}{|l|l|l|l|}
+	\hline
+	Subset & Average feature correlation & Average class correlation & Merrit \\\hline
+	{A} & 1 & 0.881 & 0.881 \\\hline
+	{B} & 1 & 0.881 & 0.881 \\\hline
+	{C} & 1 & 0.864 & 0.864 \\\hline
+	{A,B} & 1 & 0.881 & 0.881 \\\hline
+	{A,C} & 0.762 & 0.873 & 0.93 \\\hline
+	{B,C} & 0.762 & 0.873 & 0.93 \\\hline
+	{A,B,C} & 0.841 & 0.876 & 0.926 \\\hline
+\end{tabular}
+
+\paragraph{}
+Laut den ausgerechneten Daten sind die Antworten wie folgt: 
+\paragraph{a)}
+Der Naive Algorithmus würde zuerst A oder B, und dann das jeweilig andere Feature verwenden, da diese den höchsten Korrelationskoeffizienten mit der Klasse haben. Jedoch wäre dies eine schlechte Wahl, da A und B ziemlich stark miteinander korrelieren, also dem jeweils anderen Feature keine neuen Informationen hinzufügen.
+\paragraph{b)}
+Laut dem Merit sind am besten entweder A und C oder B und C. A und B sind vom Informationsgehalt sowieso austauschbar, und C fügt neue Informationen hinzu die den Merit verbessern.
+\paragraph{c)}
+Da das hinzufügen von dem Feature das wir bei b) weggelassen haben keine neuen Informationen hinzufügt würde sich der Merit dadurch verschlechtern. Die beste Lösung bei beliebiger Kardinalität wäre also die gleiche wie bei b).
+
+\subsubsection{Code und Kommandozeilenausgabe}
+
+\end{document}

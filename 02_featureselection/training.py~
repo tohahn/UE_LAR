@@ -1,0 +1,16 @@
+import numpy as np
+from itertools import combinations
+
+def correlation(a,b):
+	a_mean = np.mean(a)
+	b_mean = np.mean(b)
+	return np.sum((a-a_mean) * (b-b_mean))/(np.sqrt(np.sum(np.pow(a-a_mean, 2))) * np.sqrt(np.sum(np.pow(b-b_mean, 2))))
+
+if __name__ == "__main__":
+	data = np.zeros(4, dtype=[('a', 'f8'), ('b', 'f8'), ('c', 'f8'), ('class', 'f8')])
+	data[0] = (-2, -1, 0, -1)
+	data[1] = (-2, -1, 1.4, -1)
+	data[2] = (2, 1, -1, 1)
+	data[3] = (-.2, -.1, -1, 1)
+	
+	
