@@ -39,6 +39,8 @@ Aufbauend auf folgender Formel können wir nun die Korrelationskoeffizienten unt
 	C & -0.762 & -0.762 & 1 & -0.864 \\\hline
 \end{tabular}
 
+\paragraph{Average Features}
+Um aus den Korrelationen aus der vorherigen Tabelle die durchschnittlichen Korrelationen zu bilden ist nicht viel notwendig: Die Koeffizienten der verschiedenen Features müssen zusammengezählt werden und durch ihre Anzahl dividert. Macht man dies, entstehen folgende Werte:
 \paragraph{}
 \begin{tabular}{|l|l|l|l|}
 	\hline
@@ -62,5 +64,42 @@ Laut dem Merit sind am besten entweder A und C oder B und C. A und B sind vom In
 Da das hinzufügen von dem Feature das wir bei b) weggelassen haben keine neuen Informationen hinzufügt würde sich der Merit dadurch verschlechtern. Die beste Lösung bei beliebiger Kardinalität wäre also die gleiche wie bei b).
 
 \subsubsection{Code und Kommandozeilenausgabe}
+\lstinputlisting[language=Python]{../selection.py}
+\begin{lstlisting}[title=Kommandozeilenausgabe]
+Evaluationg featureset ['a']
+The average feature feature correlation is 1.
+The average feature class correlation is: 0.881218831921.
+The merit is: 0.881218831921
 
+Evaluationg featureset ['b']
+The average feature feature correlation is 1.
+The average feature class correlation is: 0.881218831921.
+The merit is: 0.881218831921
+
+Evaluationg featureset ['c']
+The average feature feature correlation is 1.
+The average feature class correlation is: 0.864158565218.
+The merit is: 0.864158565218
+
+Evaluationg featureset ['a', 'b']
+The average feature feature correlation is 1.0.
+The average feature class correlation is: 0.881218831921.
+The merit is: 0.881218831921
+
+Evaluationg featureset ['a', 'c']
+The average feature feature correlation is 0.761512801436.
+The average feature class correlation is: 0.87268869857.
+The merit is: 0.929889722672
+
+Evaluationg featureset ['b', 'c']
+The average feature feature correlation is 0.761512801436.
+The average feature class correlation is: 0.87268869857.
+The merit is: 0.929889722672
+
+Evaluationg featureset ['a', 'b', 'c']
+The average feature feature correlation is 0.841008534291.
+The average feature class correlation is: 0.875532076353.
+The merit is: 0.925980669039
+
+\end{lstlisting}
 \end{document}
