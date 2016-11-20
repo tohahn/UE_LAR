@@ -1,4 +1,3 @@
-# instance,actual class,classifier score
 1,True,1
 2,True,0.99
 3,True,0.87

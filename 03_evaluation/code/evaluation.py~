@@ -1,0 +1,242 @@
+#!/usr/bin/env python3
+
+# do not use any other imports!
+import numpy as np
+import matplotlib.pyplot as plt
+import random
+from sklearn.neighbors import KNeighborsClassifier as BlackBoxClassifier
+from sklearn.datasets import load_iris
+
+class Evaluation:
+	"""This class provides functions for evaluating classifiers """
+
+	def generate_cv_pairs(self, n_samples, n_folds=5, n_rep=1, rand=False,
+                          y=None):
+		""" Train and test pairs according to k-fold cross validation
+
+        Parameters
+        ----------
+
+        n_samples : int
+            The number of samples in the dataset
+
+        n_folds : int, optional (default: 5)
+            The number of folds for the cross validation
+
+        n_rep : int, optional (default: 1)
+            The number of repetitions for the cross validation
+
+        rand : boolean, optional (default: False)
+            If True the data is randomly assigned to the folds. The order of the
+            data is maintained otherwise. Note, *n_rep* > 1 has no effect if
+            *random* is False.
+
+        y : array-like, shape (n_samples), optional (default: None)
+            If not None, cross validation is performed with stratification and
+            y provides the labels of the data.
+
+        Returns
+        -------
+
+        cv_splits : list of tuples, each tuple contains two arrays with indices
+            The first array corresponds to the training data, the second to the
+            testing data for the current split. The list has the length of
+            *n_folds* x *n_rep*.
+
+        """
+        ### YOUR IMPLEMENTATION GOES HERE ###
+
+
+	def apply_cv(self, X, y, train_test_pairs, classifier):
+		""" Use cross validation to evaluate predictions and return performance
+
+        Apply the metric calculation to all test pairs
+
+        Parameters
+        ----------
+
+        X : array-like, shape (n_samples, feature_dim)
+            All data used within the cross validation
+
+        y : array-like, shape (n-samples)
+            The actual labels for the samples
+
+        train_test_pairs : list of tuples, each tuple contains two arrays with indices
+            The first array corresponds to the training data, the second to the
+            testing data for the current split
+
+        classifier : function
+            Function that trains and tests a classifier and returns a
+            performance measure. Arguments of the functions are the training
+            data, the testing data, the correct labels for the training data,
+            and the correct labels for the testing data.
+
+        Returns
+        -------
+
+        performance : float
+            The average metric value across train-test-pairs
+        """
+        ### YOUR IMPLEMENTATION GOES HERE ###
+
+
+	def black_box_classifier(self, X_train, X_test, y_train, y_test):
+		""" Learn a model on the training data and apply it on the testing data
+
+		Parameters
+		----------
+
+		X_train : array-like, shape (n_samples, feature_dim)
+            The data used for training
+
+        X_test : array-like, shape (n_samples, feature_dim)
+            The data used for testing
+
+        y_train : array-like, shape (n-samples)
+            The actual labels for the training data
+
+        y_test : array-like, shape (n-samples)
+            The actual labels for the testing data
+
+        neighbors : int, optional (default: 1)
+            The number of neighbors considered for the classification
+
+        Returns
+        -------
+
+        accuracy : float
+            Accuracy of the model on the testing data
+        """
+		bbc = BlackBoxClassifier(n_neighbors=10)
+		bbc.fit(X_train, y_train)
+		acc = bbc.score(X_test, y_test)
+		return acc
+	
+	def generate_confusion_matrix(self, predictions, y_actual, threshold):
+		matrix = {'true_positives':0, 'true_negatives':0, 'false_positives':0, 'false_negatives':0}
+
+		for i,p in enumerate(predictions):
+			if (y_actual[i]):
+				if (p >= threshold):
+					matrix['true_positives'] += 1
+				else:
+					matrix['false_negatives'] += 1
+			else:
+				if (p >= threshold):
+					matrix['false_positives'] += 1
+				else:
+					matrix['true_negatives'] += 1
+
+		return matrix
+	
+	def generate_roc_point(self, predictions, y_actual, threshold):
+		matrix = self.generate_confusion_matrix(predictions, y_actual, threshold)
+		
+		return (matrix['false_positives'] / (matrix['false_positives'] + matrix['true_negatives']), matrix['true_positives'] / (matrix['true_positives'] + matrix['false_negatives']))
+
+	def generate_roc_points(self, predictions, y_actual):
+		""" Efficiently generating ROC points
+
+        For every threshold in our prediction set the respective rates are calculated by help of a confusion matrix. At the end, the points are sorted by false-positive rate.
+
+        Parameters
+        ----------
+
+        predictions : array-like, shape (n-samples)
+            The classifier's estimates that the samples are positive
+
+        y_actual : array-like, boolean-like, shape (n-samples)
+            The actual labels for the samples
+
+        Returns
+        -------
+
+        roc_points : list of tuples (false-positive rate, true-positive rate)
+            ROC points increasing by false-positive rate
+        """
+		roc_points = []
+		for t in sorted(np.unique(predictions))[::-1]:
+			roc_points.append(self.generate_roc_point(predictions, y_actual, t))
+			print (t)
+			print(roc_points[-1])
+		return np.array(roc_points)
+
+
+	def auc(self, roc_points):
+		""" Calculate the area under curve (AUC)
+
+        The area under the curve is approximated by summing small rectangles at certain steps. Because there are many steps, this solution gets reasonably close to the real solution.
+
+        Parameters
+        ----------
+
+        roc_points : list of tuples (false-positive rate, true-positive rate)
+            ROC points increasing by false-positive rate
+
+        Returns
+        -------
+
+        area : float
+            The area under curve (AUC)
+        """
+		area = 0
+		for i,p in enumerate(roc_points):
+			area += (p[0] - roc_points[i-1][0]) * p[1]
+		return area
+
+	def load_score_file(self, filename):
+		""" Read file with structure instance number, actual class, classifier score
+
+		Parameters
+		----------
+
+		filename: string
+			absolute path to the file that should be read in
+
+		Returns
+		-------
+
+		predictions : array-like, shape (n-samples)
+			The classifier's estimates that the samples are positive
+
+		y_actual : array-like, shape (n-samples)
+			The actual labels for the samples
+		"""
+		predictions = []
+		y_actual = []
+
+		with open(filename, 'rb') as f:
+			data = np.loadtxt(f, dtype=[('class', 'S1'), ('pred', 'f')], delimiter=',', usecols=(1,2))
+			for v in data:
+				predictions.append(float(v[1]))
+				if (v[0] == b'T'):
+					y_actual.append(True)
+				else:
+					y_actual.append(False)
+
+		return predictions,y_actual
+
+if __name__ == '__main__':
+	# Instance of the Evaluation class
+	c = Evaluation()
+    
+	filename = "../data/output1.txt"
+
+	data = c.load_score_file(filename)
+	points = c.generate_roc_points(data[0], data[1])
+	area = c.auc(points)
+	
+	plt.plot(points[:,0], points[:,1], color='darkorange', label='ROC curve (area = %0.2f)' % area)
+	plt.xlabel('False Positive Rate')
+	plt.ylabel('True Positive Rate')
+	plt.title('ROC Curve')
+	plt.legend()
+	plt.show()
+
+	## EXERCISE 3.3 c) ##
+	# loading a data set for evaluation
+	iris = load_iris()
+	X = iris["data"][40:,:]
+	y = iris["target"][40:]
+
+	### YOUR IMPLEMENTATION FOR EXERCISE 3.3 c) GOES HERE ###
