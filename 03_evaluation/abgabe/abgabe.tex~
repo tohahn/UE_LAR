@@ -84,4 +84,7 @@ The ROC curve is calculated by taking the unique prediciton values from our clas
     \caption{The ROC Curve}
     \label{fig:roc}
 \end{figure}
+
+\subsection{Threshold selection}
+The goal of our classifier would be the upper left corner, where the false positive rate is 0 and the true positive rate is 1. As our classifier doesn't reach that point, we want to choose a point that is closest to this. It seems that a good value for this would be the point at false positive rate ~0.25 and true positive rate 0.7, the subpeak before the peak. The threshold there is 0.479999989271 so this would be a good value for us.
 \end{document}
