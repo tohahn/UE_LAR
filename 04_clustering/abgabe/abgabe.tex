@@ -1,0 +1,68 @@
+\documentclass{article}
+\usepackage{amsmath}
+\usepackage{listings}
+\usepackage[utf8]{inputenc}
+\usepackage{graphicx}
+\usepackage{url}
+\usepackage{placeins}
+
+\graphicspath{ {../results/} }
+
+\lstset{
+	basicstyle=\footnotesize,
+	numbers=left,
+	tabsize=3,
+	title=\lstname,
+	breaklines=true
+}
+
+\addtolength{\oddsidemargin}{-.875in}
+\addtolength{\evensidemargin}{-.875in}
+\addtolength{\textwidth}{1.75in}
+
+\addtolength{\topmargin}{-.875in}
+\addtolength{\textheight}{1.75in}
+
+\title{Lernverfahren autonomer Roboter - Übung 4}
+\author{Tobias Hahn - 3073375 \\ André Osse - 3066368\\Waldemar Stockmann - 3066\\Markus Strehling - 3066373}	
+	
+\begin{document}
+\maketitle
+\newpage
+\section*{Übung 4}
+\section{K-Means}
+
+\subsection{Implementierung von K-Means}
+\lstinputlisting[language=Python]{../code/KMeans.py}
+
+\subsection{Tests von der K-Means-Implementierung}
+\lstinputlisting[language=Python]{../code/Test.py}
+
+\subsection{Clustering: Dataset2D}
+Wie in der Aufgabe vorgegeben wurde k=3 gewählt. Ebenfalls wurden die initialen Reproduktions-Vektoren der Cluster zufällig gewählt, da mit den ersten k-gewählten Vektoren als Reproduktions-Vektoren keine optimalen aber reproduzierbare Ergebnisse geliefert wurden.
+
+\subsubsection{Erklärung des Plots}
+Die roten Punkte repräsentieren die 2D-Vektoren aus dem Datensatz. Das blaue Viereck stellt den Reproduktions-Vektor des jeweiligen Clusters da. Die grünen Vierecke sind die genutzten Vektoren um den Reproduktions-Vektor zu bestimmen.\\
+Dabei ist zu beachten, dass diese Vektoren sich ebenfalls in anderen Clustern befinden können, da sie nicht die Reproduktion, sondern die Findung des Reproduktions-Vektors dienen. Desweiteren wenn diese Vektoren zu diesem Zeitpunkt der Iteration weniger optimal liegen, kann es geschehen, dass ein Vektor einem anderen Reproduktions-Vektor zugewiesen wird, als angenommen werden würde. Deshalb kann es geschehen, dass grüne Dreiecke ebenfalls in anderen der 'Haufen' auffindbar wären.\\
+In dem Durchlauf, welcher diese Plots darstellen, ist dies jedoch nicht geschehen.
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=\textwidth]{KMeans0.png}
+    \caption{Cluster: 1}
+    \label{fig:roc}
+\end{figure}
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=\textwidth]{KMeans1.png}
+    \caption{Cluster: 2}
+    \label{fig:roc}
+\end{figure}
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=\textwidth]{KMeans2.png}
+    \caption{Cluster: 3}
+    \label{fig:roc}
+\end{figure}
+
+\end{document}
