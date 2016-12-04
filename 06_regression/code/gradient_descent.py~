@@ -35,7 +35,9 @@ def gradient_descent(x0, alpha, grad, n_iter=100, return_path=False):
         path = [x0]
         for i in range(0,n_iter):
             x0 -= alpha * grad(x0)
+            print(len(path))
             path.append(x0)
+            print(len(path))
         return (x0,path)
     else:
         for i in range(0,n_iter):
