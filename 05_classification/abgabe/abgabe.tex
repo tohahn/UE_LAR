@@ -104,4 +104,39 @@ Die Resultate sind in folgenden Plots zu sehen:
 \subsubsection{Erklärung}
 Wie man sieht ist die Accuracy ziemlich identisch. Dies liegt daran dass alle drei Distanzmetriken auf dem Abstand der Punkte im Raum abhängen, und daher die ähnlichen Argumente wie bei Punkt Zwei zutreffen.
 
+\section{Bayesian classfication}
+\subsection{Decision Boundary value x0}
+Gegeben waren:\\
+pdf class y1: $p(x|y) =  \frac{1}{\sqrt{\pi}}exp(-x^2 $ \\
+pdf class y2: $ p(x|y) =  \frac{1}{\sqrt{\pi}}exp(-(x-1)^2 $
+
+\[
+p(x=0|y_1) = \frac{1}{\sqrt{\pi}}exp(-0^2) = \frac{1}{\sqrt{\pi}} * 1 = \frac{1}{\sqrt{\pi}}
+\]\\
+\[
+p(x=1|y_2) = \frac{1}{\sqrt{\pi}}exp(-(1-1)^2) = \frac{1}{\sqrt{\pi}} * 1 = \frac{1}{\sqrt{\pi}}
+\]\\
+\[
+p(x=0|y_1) = p(x=1|y_2) => x_0 = 0.5
+\]
+Das Ergebnis ist $x_0$ = 0.5.
+
+\subsection{Threshold of loss matrix}
+Gegebene Loss Matrix war:\\
+$
+\begin{matrix}
+	0 & 5\\
+	2 & 0\\
+\end{matrix}
+$\\\\
+Der Threshold müsste so verlaufen, dass $\lambda_{1j}$ und $\lambda_{2j}$ voneinander getrennt werden. Also in der Matrix direkt betrachtet "horizontal" in der Mitte verlaufend. Die "obere" Zeile stellt die Klasse 1 dar. Bei $\lambda_{21}$ wird dies jedoch als Klasse 2 eingestuft. Also ist dies eine falsche Erkennung. Ebenso verhält es sich mit $\lambda_{21}$, dass an dieser Stelle die Klasse 2 als Klasse 1 eingestuft wird. Somit würde der Threshold eine lineare Trennung der Klassen 1 und 2 voneinander bewirken.
+
+\subsection{Calculate the threshold}
+Loss Function:
+\[ \pi(x) = 1 \Leftrightarrow \frac{p(x=0|y_1)}{p(x=1|y_2)} \]\\
+\[\frac{\lambda_{12} - \lambda_{22}}{\lambda_{21} - \lambda_{11}}\]\\
+\[\Rightarrow \frac{5}{2} = 2.5 \]
+Der Threshold würde den Wert $2.5$ erhalten.
+
+
 \end{document}
