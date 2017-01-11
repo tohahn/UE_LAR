@@ -174,11 +174,8 @@ class DecisionTreeNode():
         if not self.children:
             return self.label
         exp = data_vector[self.attribute]
+
         if exp not in [c.attribute_value for c in self.children]:
-            #print(exp)
-            #print([c.attribute_value for c in self.children])
-            #print(exp not in [c.attribute_value for c in self.children])
-            #input()
             return Counter([c.classify(data_vector) for c in self.children]).most_common(1)[0][0]
         
         for c in self.children:
@@ -223,7 +220,7 @@ class DecisionTreeNode():
         ### referenced by the idx_list and create corresponding
         ### subtrees. Build recursivly the whole decision tree
         ### up to the desired maximum depth
-        if not attributes:
+        if (len(attributes) == 0):
             self.label = Counter([label[i] for i in idx_lst]).most_common(1)[0][0]
             return self
         if (max_depth == 0):
@@ -237,7 +234,8 @@ class DecisionTreeNode():
         a_index = np.argmax(infos)
 
         a = attributes[a_index]
-        attributes.remove(a)
+        new_attribs = attributes[:]
+        new_attribs.remove(a)
         self.attribute = a[0]
         exps = list(set([data[i][a[0]] for i in idx_lst]))
         idx_lsts = {}
@@ -250,10 +248,9 @@ class DecisionTreeNode():
         
         self.children = [DecisionTreeNode() for exp in exps]
         for i,x in enumerate(exps):
-            self.children[i].make_tree(idx_lsts[exp], data, label, attributes, max_depth, default)
+            self.children[i].make_tree(idx_lsts[exp], data, label, new_attribs, max_depth, default)
         for i,x in enumerate(exps):
             self.children[i].attribute_value = x
-        
         return self
         
     def info(self, v, g, a, n):
@@ -352,9 +349,18 @@ if __name__ == '__main__':
 
     ### YOUR IMPLEMENTATION GOES HERE ###
     av_accuracies = [np.mean(dt.apply_k_fold_cv(data, labels, dt.dt_classifier, 10, attr_names=attr_names, max_depth=d)) for d in range(1,8)]
+    print(av_accuracies)
     plt.plot(av_accuracies)
     plt.ylabel("Average Accuracy")
     plt.xlabel("Height of tree")
     plt.show()
 
-
+    tree = DecisionTreeNode()
+    tree.make_tree(np.arange(data.shape[0]), data, labels, attr_names, 2)
+    print("[{0}](None)".format(attr_names[tree.attribute][1]))
+    new_childs = []
+    for c in tree.children:
+        print("|[{0}]({1})".format(attr_names[c.attribute][1], c.attribute_value))
+        new_childs.extend(c.children)
+    for c in new_childs:
+        print("||={0}".format(c.label))
