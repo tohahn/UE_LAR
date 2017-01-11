@@ -1,0 +1,72 @@
+\documentclass{article}
+\usepackage{amsmath}
+\usepackage[utf8]{inputenc}
+\usepackage{pgfplots}
+\usepackage{listings}
+\usepackage[utf8]{inputenc}
+\usepackage{graphicx}
+
+\graphicspath{ {../results/} }
+
+\lstset{
+	basicstyle=\footnotesize,
+	numbers=left,
+	tabsize=3,
+	title=\lstname,
+	breaklines=true
+}
+
+\addtolength{\oddsidemargin}{-.875in}
+\addtolength{\evensidemargin}{-.875in}
+\addtolength{\textwidth}{1.75in}
+
+\addtolength{\topmargin}{-.875in}
+\addtolength{\textheight}{1.75in}
+
+\title{Lernverfahren autonomer Roboter - Übung 8}
+\author{Tobias Hahn\\ 3073375}	
+	
+\begin{document}
+\maketitle
+\newpage
+\section{Decision Tree}
+
+\subsection{Continous data}
+
+\subsection{Same path twice}
+
+\subsection{Information gain}
+Der Gain einer Partitionierung ist gegeben durch die Formel
+\paragraph{}
+\[
+	Gain(X,T) = Info(T) - Info(X,T)
+\]
+\paragraph{}
+Um also zu zeigen dass der Gain von der Partitionierung 0 ist, muss gezeigt werden dass $Info(T) = Info(X,T)$.
+Dafür ist es hilfreich, sich deren Definitionen zu vergegenwärtigen. Die verwendeten Zeichen sind:
+\paragraph{}
+\begin{itemize}
+	\item n = Anzahl der negativen Beispiele
+	\item p = Anzahl der positiven Beispiele
+	\item $|T_i|$ = Anzahl der Elemente in Partition i
+	\item |T| = Gesamtanzahl der Elemente
+	\item $n_i$ = Anzahl der negativen Beispiele in Partition i
+	\item $p_i$ = Anzahl der positiven Beispiele in Partition i
+\end{itemize}
+\paragraph{}
+\begin{align*}
+	Info(T) &= I(\frac{p}{p+n},\frac{n}{p+n}) = -(\frac{p}{p+n} * log_2(\frac{p}{p+n}) + \frac{n}{p+n} * log_2(\frac{n}{p+n})) \\
+	Info(X,T) &= \sum_i \frac{|T_i|}{|T|} I(\frac{p_i}{p_i+n_i},\frac{n_i}{p_i+n_i})
+\end{align*}
+
+Wir wissen, dass $\frac{p_i}{p_i+n_i}$ für alle Partitionen gleich ist. Nun müssen wir noch zeigen dass daraus auch folgt dass $\frac{n_i}{p_i+n_i}$ für alle Partitionen gleich ist, dass hätten wir gezeigt dass wir uns das gewichtete Mitteln sparen können, da das gewichtete Mitteln von immergleichen Zahlen immer die gleiche Zahl ergibt. Dies ist jedoch einfach zu zeigen, da $\frac{n_i}{p_i+n_i} = 1 - \frac{p_i}{p_i+n_i}$, d.h. wenn das eine für alle gleich ist ist das andere Verhältnis auch für beide gleich. Damit kann man die zweite Gleichung vereinfachen zu: 
+\paragraph{}
+\[
+	Info(X,T) = I(\frac{p_i}{p_i+n_i},\frac{n_i}{p_i+n_i})
+\]
+\paragraph{}
+Diese vereinfachte Form sieht nun schon fast so aus wie der Informationsgehalt von Info(T), nur dass statt der Gesamtanzahl von n und p jeweils die Anzahlen in einer der Partitionen stehen. Da wir aber gezeigt haben dass beide Verhältnisse in allen Partitionen gleich sind, so folgt daraus dass das Verhältnis auch in der Summe der Partitionen das gleiche ist. D.h. Info(T) = Info(X,T), und damit Gain = 0.
+
+\subsection{Decision tree learning}
+
+\end{document}
