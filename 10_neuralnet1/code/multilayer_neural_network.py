@@ -105,7 +105,8 @@ class FullyConnectedLayer(object):
         if dEdY.shape[1] != self.J:
             raise ValueError("%r != %r" % (len(dEdY), self.J))
         
-        dEdX = dEdY.dot(self.W[:,1:]) * self.gd(self.Y)
+        dEdY = dEdY * self.gd(self.Y)
+        dEdX = dEdY.dot(self.W[:,1:])
         Wd = dEdY.T.dot(self.Z)
 
         return dEdX, Wd
