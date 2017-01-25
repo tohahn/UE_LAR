@@ -1,0 +1,52 @@
+\documentclass{article}
+\usepackage{amsmath}
+\usepackage[utf8]{inputenc}
+\usepackage{listings}
+\usepackage{graphicx}
+
+\graphicspath{ {../results/} }
+
+\lstset{
+	basicstyle=\footnotesize,
+	numbers=left,
+	tabsize=3,
+	title=\lstname,
+	breaklines=true
+}
+
+\addtolength{\oddsidemargin}{-.875in}
+\addtolength{\evensidemargin}{-.875in}
+\addtolength{\textwidth}{1.75in}
+
+\addtolength{\topmargin}{-.875in}
+\addtolength{\textheight}{1.75in}
+
+\title{Lernverfahren autonomer Roboter - Übung 10}
+\author{G10\\ Andre Osse\\ Waldemar Stockmann\\ Markus Strehling\\ Tobias Hahn}	
+	
+\begin{document}
+\maketitle
+\newpage
+\section{Multilayer Neural Network and Backpropagation}
+
+\subsection{Implementation}
+Das Netzwerk wurde wie gewünscht implementiert, der Code ist wie folgt:
+
+\lstinputlisting{../code/multi.py}
+
+\paragraph{}
+Außerdem wurde der Test ausgeführt, mit folgendem Ergebnis:
+\begin{lstlisting}
+Fully connected layer (20 nodes, 20 x 11 weights)
+Fully connected layer (10 nodes, 10 x 21 weights)
+Fully connected layer (3 nodes, 3 x 11 weights)
+Checking gradients up to 5 positions after decimal point...OK
+\end{lstlisting}
+
+\subsection{Sinus lernen}
+Der Sinus wurde gelernt, folgende Ausgaben wurden mit dem Testprogramm erzielt:
+\paragraph{}
+\includegraphics[width=\textwidth]{learning_rate.png}
+\paragraph{}
+\includegraphics[width=\textwidth]{prediction.png}
+\end{document}
