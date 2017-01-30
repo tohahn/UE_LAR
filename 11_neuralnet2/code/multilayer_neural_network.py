@@ -239,6 +239,7 @@ class ConvolutionalLayer(object):
         # Initialize weight matrices randomly: draw weights from a Gaussian
         # distribution
         self.W = random_state.normal(0, self.std_dev, self.weight_shape)
+        self.B = random_state.normal(0, self.std_dev, self.B.shape)
         ######################################################################
 
     def get_output_shape(self):
@@ -534,8 +535,7 @@ class MultilayerNeuralNetwork(object):
         if get_error:
             if self.error_function == "ce":
                 ##############################################################
-                raise NotImplementedError(
-                    "TODO implement MultilayerNeuralNetwork.gradient()")
+                e = -np.sum(np.log(Y) * T)
                 ##############################################################
             elif self.error_function == "sse":
                 ##############################################################

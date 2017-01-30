@@ -93,5 +93,5 @@ def check_gradient(D, F, layers, training):
 
 if __name__ == "__main__":
     #test_mlnn_regression_gradient()
-    #test_mlnn_classification_gradient()
+    test_mlnn_classification_gradient()
     test_cnn_gradient()

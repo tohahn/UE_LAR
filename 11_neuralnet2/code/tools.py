@@ -171,9 +171,9 @@ if has_numba:
         # get helpful error messages instead of segmentation faults.
         for n in range(N):
             for j in range(J):
-                for y_o in range(Y_o):
-                    for x_o in range(X_o):
-                        for i in range(I):
+                for i in range(I):
+                    for y_o in range(Y_o):
+                        for x_o in range(X_o):
                             for y_k in range(Y_k):
                                 for x_k in range(X_k):
                                     A[n,j,y_o,x_o] += kernels[j,i,y_k,x_k] * feature_maps[n,i,y_o*stride_y+y_k, x_o*stride_x+x_k]

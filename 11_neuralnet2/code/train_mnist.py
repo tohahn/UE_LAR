@@ -24,7 +24,32 @@ if __name__ == "__main__":
     F = categories
     ############################################################################
     # Here you should define and train 'mlnn' (type: MultilayerNeuralNetwork)
-    raise NotImplementedError("TODO implement training on MNIST data")
+    layers = \
+        [
+            {
+                "type": "convolutional",
+                "num_feature_maps": 6,
+                "kernel_shape": (5, 5),
+                "strides": (2, 2)
+            },
+            {
+                "type": "convolutional",
+                "num_feature_maps": 50,
+                "kernel_shape": (5, 5),
+                "strides": (2, 2)
+            },
+            {
+                "type": "fully_connected",
+                "num_nodes": 100
+            }
+        ]
+    
+    mlnn = MultilayerNeuralNetwork(
+        D=(1, 28,28), F=10, layers=layers, std_dev=0.01,
+        verbose=1)
+    mbsgd = MiniBatchSGD(net=mlnn, epochs=15, batch_size=32, alpha=0.01, alpha_decay=0.9999, min_alpha=0.00005, eta=0.5, eta_inc=0.00001, max_eta=0.9, random_state=0, verbose=1)
+    mbsgd.fit(train_images, train_targets)
+
     ############################################################################
 
     # Print accuracy and cross entropy on test set
